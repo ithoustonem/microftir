@@ -1,0 +1,81 @@
+<a class="skip" href="#main">Skip to main content</a>
+
+<div class="topbar">
+  <div class="container topbar__inner">
+    <span class="topbar__item"><app-icon name="pin" [size]="15" /> {{ company.street }}, {{ company.city }}</span>
+    <a class="topbar__item" [href]="company.phoneHref"><app-icon name="phone" [size]="15" /> {{ company.phone }}</a>
+  </div>
+</div>
+
+<header class="header">
+  <div class="container header__inner">
+    <a routerLink="/" class="brand" aria-label="Micro FT-IR Analysis, home">
+      <img src="images/logo.jpg" alt="" width="54" height="40" />
+      <span>
+        <strong>Micro FT-IR Analysis</strong>
+        <small>{{ company.name }}</small>
+      </span>
+    </a>
+
+    <button class="menu-btn" type="button" (click)="menuOpen.set(!menuOpen())"
+            [attr.aria-expanded]="menuOpen()" aria-controls="site-nav" aria-label="Menu">
+      <app-icon [name]="menuOpen() ? 'close' : 'menu'" />
+    </button>
+
+    <nav id="site-nav" class="nav" [class.nav--open]="menuOpen()" aria-label="Main">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a routerLink="/micro-ftir" routerLinkActive="active">Micro FT-IR</a>
+      <a routerLink="/" fragment="applications">Applications</a>
+      <a [href]="links.semEds">SEM/EDS</a>
+      <a routerLink="/contact" routerLinkActive="active">Contact</a>
+      <a routerLink="/contact" class="btn btn--primary nav__cta">Request Analysis</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <router-outlet />
+</main>
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__about">
+      <div class="brand brand--light">
+        <img src="images/logo.jpg" alt="" width="54" height="40" />
+        <span><strong>Micro FT-IR Analysis</strong><small>{{ company.name }}</small></span>
+      </div>
+      <p>
+        A materials laboratory specializing in microanalysis of inorganic and organic materials for manufacturers,
+        laboratories, consultants, engineers and researchers.
+      </p>
+    </div>
+    <div>
+      <h3>Services</h3>
+      <ul>
+        <li><a routerLink="/micro-ftir">Micro FT-IR analysis</a></li>
+        <li><a [href]="links.semEds">SEM/EDS analysis</a></li>
+        <li><a routerLink="/" fragment="applications">Applications</a></li>
+        <li><a [href]="links.gallery">Gallery</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Company</h3>
+      <ul>
+        <li><a routerLink="/">Home</a></li>
+        <li><a [href]="links.about">About us</a></li>
+        <li><a routerLink="/" fragment="faq">FAQs</a></li>
+        <li><a routerLink="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <ul class="footer__contact">
+        <li><app-icon name="phone" [size]="16" /> <a [href]="company.phoneHref">{{ company.phone }}</a></li>
+        <li><app-icon name="pin" [size]="16" /> <a [href]="company.mapUrl" target="_blank" rel="noopener">{{ company.street }}<br />{{ company.city }}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    © {{ year }} {{ company.name }} All rights reserved.
+  </div>
+</footer>

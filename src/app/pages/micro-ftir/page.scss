@@ -1,0 +1,20 @@
+.page-hero {
+  background: linear-gradient(115deg, var(--c-ink), var(--c-ink-2) 60%, #0a46a8);
+  color: #c9d3e3; padding-block: clamp(48px, 7vw, 88px);
+  h1 { color: #fff; font-size: clamp(2rem, 4.5vw, 3.1rem); margin: 0 0 14px; }
+  p { max-width: 62ch; font-size: 1.12rem; margin: 0; }
+  .eyebrow { color: var(--c-accent); }
+}
+.split { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
+.split--rev { grid-template-columns: 1.1fr 1fr; }
+figure { margin: 0; }
+figure img { border-radius: var(--radius); box-shadow: var(--shadow); background: #fff; width: 100%; }
+figcaption { font-size: 0.88rem; color: var(--c-muted); margin-top: 12px; }
+.ticks { margin-top: 20px; }
+.modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.mode { padding: 28px; border-top: 4px solid var(--c-accent); h3 { margin: 0 0 8px; } p { margin: 0; } }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+@media (max-width: 900px) {
+  .split, .split--rev, .modes { grid-template-columns: 1fr; gap: 32px; }
+  .split--rev figure { order: 2; }
+}

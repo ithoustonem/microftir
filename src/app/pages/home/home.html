@@ -1,0 +1,207 @@
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <span class="hero__badge"><app-icon name="pin" [size]="15" /> Materials laboratory · Stafford, Texas</span>
+      <h1>Identify unknown materials, <span>down to 10 microns</span></h1>
+      <p class="hero__lede">
+        Micro FT-IR analysis of polymers, coatings, fibers, rubber, residues and liquids. We find out what your
+        contaminant or material is, and pair it with SEM/EDS when you need the full picture.
+      </p>
+      <div class="hero__actions">
+        <a routerLink="/contact" class="btn btn--accent">Request Analysis <app-icon name="arrow" [size]="18" /></a>
+        <a [href]="company.phoneHref" class="btn btn--ghost"><app-icon name="phone" [size]="18" /> {{ company.phone }}</a>
+      </div>
+      <ul class="hero__points">
+        @for (b of benefits; track b.title) {
+          <li><app-icon name="check" [size]="18" /> {{ b.title }}</li>
+        }
+      </ul>
+    </div>
+
+    <div class="hero__card card">
+      <h2>Need help or have a question?</h2>
+      <p>Tell us about your sample and we'll get back to you.</p>
+      <app-contact-form [compact]="true" />
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats">
+  <div class="container stats__grid">
+    @for (s of stats; track s.label) {
+      <div class="stat">
+        <strong>{{ s.value }}</strong>
+        <span>{{ s.label }}</span>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- About -->
+<section class="section">
+  <div class="container about">
+    <div>
+      <span class="eyebrow">About the lab</span>
+      <h2>Let us be your micro FT-IR department</h2>
+      <p>
+        {{ company.name }} is a materials laboratory specializing in microanalysis of inorganic and organic
+        materials. We provide analysis services to manufacturing facilities, laboratories, consultants, engineers
+        and researchers.
+      </p>
+      <p>
+        Our modern micro FT-IR system analyzes polymers, coatings, fibers, rubber and some inorganic materials,
+        and identifies unknown organic contaminants as small as 10 microns. Because micro FT-IR reveals molecular
+        structure, pairing it with SEM &amp; EDS gives a more thorough understanding of a material, which helps in
+        failure analysis and even the analysis of geological samples.
+      </p>
+      <ul class="ticks two-col">
+        @for (c of capabilities; track c) {
+          <li><app-icon name="check" [size]="18" /> {{ c }}</li>
+        }
+      </ul>
+      <a routerLink="/micro-ftir" class="btn btn--outline">Learn about micro FT-IR <app-icon name="arrow" [size]="18" /></a>
+    </div>
+    <div class="about__media">
+      <video controls preload="metadata" poster="images/ftir-map-spectra.jpg" playsinline>
+        <source src="microFT-IR_intro.mp4" type="video/mp4" />
+      </video>
+      <p class="caption">Introduction to our micro FT-IR system</p>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="section section--soft">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Services</span>
+      <h2>Microanalysis services for organic and inorganic materials</h2>
+      <p>Using the latest microanalysis technology, ColorSEM and micro FT-IR, we deliver answers to your materials problems quickly and efficiently.</p>
+    </div>
+    <div class="services">
+      @for (s of services; track s.title) {
+        <article class="service card">
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.text }}</p>
+          <ul class="ticks">
+            @for (i of s.items; track i) { <li><app-icon name="check" [size]="18" /> {{ i }}</li> }
+          </ul>
+          @if (s.external) {
+            <a class="service__link" [href]="s.link">{{ s.cta }} <app-icon name="arrow" [size]="16" /></a>
+          } @else {
+            <a class="service__link" [routerLink]="s.link">{{ s.cta }} <app-icon name="arrow" [size]="16" /></a>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Steps -->
+<section class="section steps-wrap">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">How it works</span>
+      <h2>3 easy steps to start your analysis</h2>
+    </div>
+    <ol class="steps">
+      @for (s of steps; track s.title; let i = $index) {
+        <li class="step">
+          <span class="step__num">{{ i + 1 }}</span>
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.text }}</p>
+        </li>
+      }
+    </ol>
+    <div class="center"><a routerLink="/contact" class="btn btn--primary">Start your analysis</a></div>
+  </div>
+</section>
+
+<!-- Applications / materials tabs -->
+<section class="section section--dark" id="applications">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow eyebrow--light">Applications</span>
+      <h2>What micro FT-IR can analyze</h2>
+      <p>Polymers, plastics, coatings, powders, residues and liquids can be analyzed to determine their chemical properties, composition and functional groups.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Materials">
+      @for (m of materials; track m.key) {
+        <button type="button" role="tab" [attr.aria-selected]="activeMaterial() === m.key"
+                [class.active]="activeMaterial() === m.key" (click)="activeMaterial.set(m.key)">{{ m.label }}</button>
+      }
+    </div>
+    <div class="tabpanel" role="tabpanel">
+      <div>
+        <h3>{{ material().label }}</h3>
+        <p>{{ material().text }}</p>
+        <a routerLink="/contact" class="btn btn--accent">Request {{ material().label.toLowerCase() }} analysis</a>
+      </div>
+      <img [src]="material().image" [alt]="material().alt" width="805" height="400" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- Case studies -->
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Examples</span>
+      <h2>Micro FT-IR in practice</h2>
+      <p>A few examples of what micro FT-IR analysis reveals.</p>
+    </div>
+    <div class="cases">
+      @for (c of cases; track c.title) {
+        <article class="case card">
+          @if (c.image) {
+            <img [src]="c.image" [alt]="c.title" width="900" height="400" loading="lazy" />
+          } @else {
+            <div class="case__ph"><app-icon name="spectrum" [size]="64" /></div>
+          }
+          <div class="case__body">
+            <h3>{{ c.title }}</h3>
+            <p>{{ c.text }}</p>
+          </div>
+        </article>
+      }
+    </div>
+    <div class="center"><a [href]="links.gallery" class="btn btn--outline">See our gallery</a></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section--soft" id="faq">
+  <div class="container faq-wrap">
+    <div>
+      <span class="eyebrow">FAQ</span>
+      <h2>Frequently asked questions</h2>
+      <p>Can't find what you need? Call us at <a [href]="company.phoneHref">{{ company.phone }}</a>.</p>
+    </div>
+    <div class="faq">
+      @for (f of faqs; track f.q; let i = $index) {
+        <div class="faq__item" [class.open]="openFaq() === i">
+          <button type="button" (click)="toggleFaq(i)" [attr.aria-expanded]="openFaq() === i" [attr.aria-controls]="'faq-' + i">
+            <span>{{ f.q }}</span><app-icon name="plus" [size]="20" />
+          </button>
+          <div class="faq__a" [id]="'faq-' + i" [hidden]="openFaq() !== i"><p>{{ f.a }}</p></div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container cta__inner">
+    <div>
+      <h2>Talk to our analysts today</h2>
+      <p>For immediate assistance call {{ company.phone }}, or send us a request and we'll be in touch.</p>
+    </div>
+    <div class="cta__actions">
+      <a routerLink="/contact" class="btn btn--accent">Request Analysis</a>
+      <a [href]="company.phoneHref" class="btn btn--ghost"><app-icon name="phone" [size]="18" /> Call now</a>
+    </div>
+  </div>
+</section>
