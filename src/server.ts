@@ -6,7 +6,12 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import nodemailer from 'nodemailer';
+import { appendFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
+
+/** Where analysis requests are saved, one JSON object per line. Override with DATA_DIR. */
+const dataDir = process.env['DATA_DIR'] || join(process.cwd(), 'data');
+const requestsFile = join(dataDir, 'contact-requests.jsonl');
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -24,7 +29,7 @@ app.get('/microftir.html', (_req, res) => res.redirect(301, '/micro-ftir'));
 
 /**
  * Analysis request form.
- * Sends an email when SMTP_HOST and CONTACT_TO are set (see README); otherwise logs the request.
+ * Every request is saved to data/contact-requests.jsonl. It is also emailed to it@houstonem.com (or CONTACT_TO) once SMTP_HOST is set (see README).
  */
 const mailer = process.env['SMTP_HOST']
   ? nodemailer.createTransport({
@@ -34,6 +39,9 @@ const mailer = process.env['SMTP_HOST']
       auth: process.env['SMTP_USER'] ? { user: process.env['SMTP_USER'], pass: process.env['SMTP_PASS'] } : undefined,
     })
   : null;
+
+/** Inbox that receives analysis requests. Override with CONTACT_TO. */
+const contactTo = process.env['CONTACT_TO'] || 'it@houstonem.com';
 
 const recent = new Map<string, number[]>();
 function rateLimited(ip: string): boolean {
@@ -72,21 +80,33 @@ app.post('/api/contact', express.json({ limit: '20kb' }), async (req, res) => {
   ].join('\n');
 
   try {
-    if (mailer && process.env['CONTACT_TO']) {
+    await mkdir(dataDir, { recursive: true });
+    await appendFile(
+      requestsFile,
+      JSON.stringify({ receivedAt: new Date().toISOString(), ip: req.ip, ...data }) + '\n',
+    );
+  } catch (err) {
+    console.error('[contact] failed to save request', err);
+    return void res.status(500).json({ ok: false, error: 'save_failed' });
+  }
+
+  try {
+    if (mailer) {
       await mailer.sendMail({
         from: process.env['CONTACT_FROM'] || process.env['SMTP_USER'],
-        to: process.env['CONTACT_TO'],
+        to: contactTo,
         replyTo: data.email,
         subject: `Analysis request from ${data.name}`,
         text,
       });
     } else {
-      console.log(`[contact] SMTP not configured; request received:\n${text}`);
+      console.log(`[contact] request saved (SMTP not configured):\n${text}`);
     }
     res.json({ ok: true });
   } catch (err) {
-    console.error('[contact] failed to send', err);
-    res.status(502).json({ ok: false, error: 'send_failed' });
+    // The request is already saved, so the visitor still gets a success message.
+    console.error('[contact] saved, but email failed', err);
+    res.json({ ok: true });
   }
 });
 
@@ -116,13 +136,14 @@ app.use((req, res, next) => {
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = process.env['PORT'] || 4000;
-  app.listen(port, (error) => {
+  const port = Number(process.env['PORT'] || 4000);
+  const host = process.env['HOST'] || '0.0.0.0';
+  app.listen(port, host, (error) => {
     if (error) {
       throw error;
     }
 
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    console.log(`Node Express server listening on http://${host}:${port}`);
   });
 }
 

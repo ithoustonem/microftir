@@ -2,13 +2,13 @@
   "name": "microftir",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
+    "start": "node dist/microftir/server/server.mjs",
+    "dev": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "fetch-assets": "node scripts/fetch-assets.mjs",
-    "serve:ssr": "node dist/microftir/server/server.mjs"
+    "ng": "ng"
   },
   "private": true,
   "packageManager": "npm@10.9.9",
@@ -37,5 +37,8 @@
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "vitest": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.19"
   }
 }

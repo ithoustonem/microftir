@@ -20,7 +20,7 @@ SEM/EDS, Gallery and About link to houstonem.com, as before.
 ```bash
 npm install
 npm run fetch-assets   # downloads the images, favicon and intro video from the current microftir.com into public/
-npm start              # dev server at http://localhost:4200
+npm run dev            # dev server at http://localhost:4200
 ```
 
 Page copy, phone, address and lists live in `src/app/shared/site.ts`, so most text edits happen there.
@@ -29,7 +29,7 @@ Page copy, phone, address and lists live in `src/app/shared/site.ts`, so most te
 
 ```bash
 npm run build
-PORT=4000 npm run serve:ssr     # node dist/microftir/server/server.mjs
+npm start              # node dist/microftir/server/server.mjs, listens on $PORT (default 4000) on 0.0.0.0
 ```
 
 Run it behind nginx/Apache (or PM2) and point microftir.com at it. The server only renders for the hosts
@@ -38,8 +38,8 @@ listed in `src/server.ts` (`microftir.com`, `www.microftir.com`, `localhost`); s
 
 ### Contact form email
 
-`POST /api/contact` validates the form, rate-limits per IP and has a honeypot for bots. To have requests
-emailed, set:
+`POST /api/contact` validates the form, rate-limits per IP and has a honeypot for bots. Requests are emailed to
+`it@houstonem.com` once an SMTP server is configured:
 
 | Variable        | Example                    |
 | --------------- | -------------------------- |
@@ -48,10 +48,12 @@ emailed, set:
 | `SMTP_SECURE`   | `false` (`true` for 465)   |
 | `SMTP_USER`     | SMTP login                 |
 | `SMTP_PASS`     | SMTP password / app password |
-| `CONTACT_TO`    | inbox that receives requests |
+| `CONTACT_TO`    | inbox that receives requests (default `it@houstonem.com`) |
 | `CONTACT_FROM`  | sender address (defaults to `SMTP_USER`) |
 
-Without these, requests are only written to the server log.
+Every request is also saved on the server to `data/contact-requests.jsonl` (one JSON object per line:
+time, IP, name, email, company, phone, message). Set `DATA_DIR` to store it elsewhere. The `data/`
+folder is git-ignored because it holds customers' personal details.
 
 ### Static-only hosting
 
