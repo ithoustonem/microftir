@@ -32,7 +32,7 @@ import { COMPANY, LINKS } from '../../shared/site';
           </ul>
         </div>
         <figure>
-          <img src="images/ftir-map-spectra.jpg" width="900" height="400"
+          <img src="/images/ftir-map-spectra.jpg" width="900" height="400"
                alt="Small sample with the optically magnified area, its functional group map and the corresponding spectra" />
           <figcaption>
             A sample measuring about half an inch, the optically magnified area, and the map and spectra produced
@@ -45,7 +45,7 @@ import { COMPANY, LINKS } from '../../shared/site';
     <section class="section section--soft">
       <div class="container split split--rev">
         <figure>
-          <img src="images/material-identification.jpg" width="900" height="400" loading="lazy"
+          <img src="/images/material-identification.jpg" width="900" height="400" loading="lazy"
                alt="Reinforced hose magnified with a light microscope, with micro FT-IR spectra of both materials" />
           <figcaption>A reinforced hose under a light microscope, with micro FT-IR spectra of both materials.</figcaption>
         </figure>
@@ -103,7 +103,7 @@ import { COMPANY, LINKS } from '../../shared/site';
           </div>
         </div>
         <figure>
-          <img src="images/ftir-oil.jpg" width="805" height="400" loading="lazy"
+          <img src="/images/ftir-oil.jpg" width="805" height="400" loading="lazy"
                alt="A liquid analyzed with the ATR attachment, with micro FT-IR spectra and functional groups" />
           <figcaption>Liquids can be analyzed with the ATR attachment.</figcaption>
         </figure>

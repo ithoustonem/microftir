@@ -29,7 +29,7 @@ Page copy, phone, address and lists live in `src/app/shared/site.ts`, so most te
 
 ```bash
 npm run build
-npm start              # node dist/microftir/server/server.mjs, listens on $PORT (default 4000) on 0.0.0.0
+npm start              # node dist/microftir/server/server.mjs, listens on $PORT (default 3000) on 0.0.0.0
 ```
 
 Run it behind nginx/Apache (or PM2) and point microftir.com at it. The server only renders for the hosts

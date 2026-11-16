@@ -10,7 +10,7 @@ import { appendFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
 /** Where analysis requests are saved, one JSON object per line. Override with DATA_DIR. */
-const dataDir = process.env['DATA_DIR'] || join(process.cwd(), 'data');
+const dataDir = process.env['DATA_DIR'] || process.env['POCKETBAY_DATA_DIR'] || join(process.cwd(), 'data');
 const requestsFile = join(dataDir, 'contact-requests.jsonl');
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
@@ -18,7 +18,11 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
 // Hosts the server will render for. Override with NG_ALLOWED_HOSTS=host1,host2 if needed.
 const angularApp = new AngularNodeAppEngine({
-  allowedHosts: ['microftir.com', 'www.microftir.com', 'localhost', '127.0.0.1'],
+  allowedHosts: [
+    'microftir.com', 'www.microftir.com',
+    'pocketbay.com', 'www.pocketbay.com', 'microftir.pocketbay.app',
+    'localhost', '127.0.0.1',
+  ],
 });
 
 app.disable('x-powered-by');
@@ -133,10 +137,10 @@ app.use((req, res, next) => {
 
 /**
  * Start the server if this module is the main entry point, or it is ran via PM2.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
+ * The server listens on the port defined by the `PORT` environment variable, or defaults to 3000, on 0.0.0.0.
  */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = Number(process.env['PORT'] || 4000);
+  const port = Number(process.env['PORT']) || 3000;
   const host = process.env['HOST'] || '0.0.0.0';
   app.listen(port, host, (error) => {
     if (error) {
