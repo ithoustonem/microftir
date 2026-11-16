@@ -29,7 +29,7 @@ Page copy, phone, address and lists live in `src/app/shared/site.ts`, so most te
 
 ```bash
 npm run build
-npm start              # node dist/microftir/server/server.mjs, listens on $PORT (default 3000) on 0.0.0.0
+npm start              # node dist/microftir/server/server.mjs, always listens on 0.0.0.0, port $PORT (default 3000)
 ```
 
 Run it behind nginx/Apache (or PM2) and point microftir.com at it. The server only renders for the hosts
@@ -39,7 +39,8 @@ listed in `src/server.ts` (`microftir.com`, `www.microftir.com`, `localhost`); s
 ### Contact form email
 
 `POST /api/contact` validates the form, rate-limits per IP and has a honeypot for bots. Requests are emailed to
-`it@houstonem.com` once an SMTP server is configured:
+`it@houstonem.com` (or `CONTACT_TO`). On GoDaddy Node.js Hosting this goes through the platform's
+built-in email gateway automatically, with no setup. Elsewhere, configure an SMTP server:
 
 | Variable        | Example                    |
 | --------------- | -------------------------- |

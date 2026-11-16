@@ -104,7 +104,15 @@ app.post('/api/contact', express.json({ limit: '20kb' }), async (req, res) => {
         text,
       });
     } else {
-      console.log(`[contact] request saved (SMTP not configured):\n${text}`);
+      // No SMTP configured: use the platform email gateway (GoDaddy Node.js Hosting provides one on loopback).
+      // If it isn't there (local dev, other hosts) the request is still saved above.
+      const gw = await fetch('http://127.0.0.1:2525/api/email/send', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ to: [contactTo], subject: `Analysis request from ${data.name}`, text, replyTo: data.email }),
+        signal: AbortSignal.timeout(30_000),
+      }).catch(() => null);
+      if (!gw?.ok) console.log(`[contact] request saved (no email sent: no SMTP and no email gateway):\n${text}`);
     }
     res.json({ ok: true });
   } catch (err) {
@@ -137,11 +145,13 @@ app.use((req, res, next) => {
 
 /**
  * Start the server if this module is the main entry point, or it is ran via PM2.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 3000, on 0.0.0.0.
+ * The server listens on 0.0.0.0, on the port defined by the `PORT` environment variable (default 3000).
  */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
   const port = Number(process.env['PORT']) || 3000;
-  const host = process.env['HOST'] || '0.0.0.0';
+  // Always bind every interface. Do NOT read process.env.HOST: some hosts (e.g. GoDaddy Node.js Hosting)
+  // set HOST=localhost, and binding 127.0.0.1 there fails with "listen EACCES".
+  const host = '0.0.0.0';
   app.listen(port, host, (error) => {
     if (error) {
       throw error;
